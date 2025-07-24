@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Lock, Unlock } from "lucide-react";
 
 import * as R from "ramda";
 
@@ -75,7 +76,7 @@ export function InnerBase64({ q }: { q: string }) {
 		<div className="flex items-center justify-center min-h-screen px-4">
 			<div className="w-full max-w-xl p-4 bg-white dark:bg-gray-800 shadow-md rounded-md space-y-4">
 				<div className="flex items-stretch space-x-2">
-					{/* Mode Selector */}
+					{/* Mode Toggle */}
 					<div className="flex-grow">
 						<label
 							htmlFor="mode"
@@ -83,15 +84,24 @@ export function InnerBase64({ q }: { q: string }) {
 						>
 							Mode:
 						</label>
-						<select
+						<button
 							name="mode"
-							value={cmd}
-							onChange={(x) => setCmd(x.target.value as Command)}
-							className="cursor-pointer block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+							type="button"
+							onClick={() => setCmd(invCmd(cmd))}
+							className="w-full flex items-center justify-center gap-2 px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md shadow-sm hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
 						>
-							<option value="encode">Encode</option>
-							<option value="decode">Decode</option>
-						</select>
+							{cmd === "encode" ? (
+								<>
+									<Lock className="w-4 h-4" />
+									Encode
+								</>
+							) : (
+								<>
+									<Unlock className="w-4 h-4" />
+									Decode
+								</>
+							)}
+						</button>
 					</div>
 
 					{/* Reset Button */}
@@ -130,11 +140,17 @@ export function InnerBase64({ q }: { q: string }) {
 					>
 						Input:
 					</label>
-					<input
+					<textarea
 						name="input"
 						value={str}
 						onChange={(s) => setStr(s.target.value)}
-						className="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+						rows={1}
+						className="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 resize-none overflow-hidden"
+						onInput={(e) => {
+							const target = e.target as HTMLTextAreaElement;
+							target.style.height = "auto";
+							target.style.height = `${target.scrollHeight}px`;
+						}}
 					/>
 				</div>
 
@@ -142,7 +158,7 @@ export function InnerBase64({ q }: { q: string }) {
 					<span className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
 						Result:
 					</span>
-					<span className="block font-mono text-gray-900 dark:text-gray-100">
+					<span className="block break-words whitespace-pre-wrap font-mono text-gray-900 dark:text-gray-100">
 						{encdec(str, cmd)}
 					</span>
 				</div>
