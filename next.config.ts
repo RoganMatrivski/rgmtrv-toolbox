@@ -3,6 +3,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
 	/* config options here */
+	images: {
+		remotePatterns: [new URL("https://teamwork.tf/images/**")],
+	},
 };
 
 if (process.env.NODE_ENV === "development") {
