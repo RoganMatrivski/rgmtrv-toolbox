@@ -6,6 +6,13 @@ const nextConfig: NextConfig = {
 	images: {
 		remotePatterns: [new URL("https://teamwork.tf/images/**")],
 	},
+
+	logging: {
+		fetches: {
+			fullUrl: true,
+			hmrRefreshes: true,
+		},
+	},
 };
 
 if (process.env.NODE_ENV === "development") {

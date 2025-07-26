@@ -1,17 +1,22 @@
-import { getMapThumbnail, getStatus } from "./getter";
 import ServerStatus from "./ServerStatus";
 import type { Metadata } from "next";
+import type { InfoResponse } from "./types";
+import { getInfo } from "./lib/fetcher";
 
 export const metadata: Metadata = {
 	title: "Shounic TF2 Server Status",
 };
 
 export default async function ShounicTf2ServerStatus() {
-	const [info, t] = await getStatus();
+	const info = await getInfo();
 
-	if (!info) throw new Error("Failed to get status");
+	if ("error" in info) throw new Error(info.error);
 
-	const thumbUrl = await getMapThumbnail(info.map_name);
-
-	return <ServerStatus server={info} thumbnailUrl={thumbUrl} timeGet={t} />;
+	return (
+		<ServerStatus
+			server={info}
+			thumbnailUrl={info.mapThumbnail}
+			// timeGet={info.fetchTime}
+		/>
+	);
 }

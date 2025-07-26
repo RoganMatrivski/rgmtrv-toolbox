@@ -25,3 +25,10 @@ export interface MapThumbnailResponse {
 export interface ResponseError {
 	error: string;
 }
+
+export type InfoResponse =
+	| (GameServer & {
+			mapThumbnail: string;
+			fetchTime: Date;
+	  })
+	| ResponseError;
