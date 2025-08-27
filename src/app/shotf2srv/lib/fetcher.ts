@@ -29,7 +29,7 @@ export async function getStatus() {
 		throw new Error(json.error);
 	}
 
-	return json[0];
+	return json.at(0);
 }
 
 export async function getMapThumbnail(mapName: string): Promise<string> {
@@ -61,6 +61,11 @@ export async function getMapThumbnail(mapName: string): Promise<string> {
 export async function getInfo(): Promise<InfoResponse> {
 	try {
 		const data = await getStatus();
+
+		if (!data) {
+			throw new Error(`Status API returns undefined. API response: ${data}`);
+		}
+
 		const mapimg = await getMapThumbnail(data.map_name);
 		return {
 			...data,
